@@ -1,0 +1,85 @@
+Installation
+============
+
+If your Linux distribution has a package manager based on the DEB
+package format, like Debian, Ubuntu, Linux Mint and others, you
+can create a tar.gz file containing the DEB binary and shell scripts
+to install and uninstall them. On other distributions you can
+directly build and install to /usr/local.
+
+Scripts ending with .py usually have many more options than described
+here. Use the --help option to list them.
+
+
+Debian, Ubuntu, Linux Mint and other DEB based systems
+------------------------------------------------------
+
+To build the DEB you need the following packages
+
+  $ apt-get install debhelper g++ cmake python3
+
+If you haven't done it yet, you also need to build and install the
+debian packages (and their dependencies):
+
+  from source package www.gitlab.com/efanomars/stmm-input/
+  - libstmm-input-gtk-dm-dev
+
+  from source package www.gitlab.com/efanomars/stmm-input-bt/
+  - libstmm-input-gtk-bt-dev
+
+The command, from the directory of this file, is
+
+  $ ./scripts/debian_create.py --builddir=~/Tmp/builddir
+
+where builddir must be an non existent or empty folder. This builds
+a Debian source package and from it the binary package using Debian
+specific tools. In the same builddir it creates the zip
+
+  sonorem-dist.tar.gz  containing install and uninstall scripts
+                           and the DEB binary package
+
+Once unzipped in a folder just run the script
+
+  $ ./install-bin.sh
+
+which uses 'dpkg -i' to install the DEB.
+
+The corresponding ./uninstall-bin.sh script is also available.
+
+
+Other distributions
+-------------------
+
+Needed packages for building:
+- libstmm-input-gtk-dm (www.gitlab.com/efanomars/stmm-input/)
+- libstmm-input-gtk-bt (www.gitlab.com/efanomars/stmm-input-bt/)
+- g++ and cmake
+- python3
+
+From this directory execute the following commands:
+
+  $ mkdir build
+  $ cd build
+
+  $ cmake -D CMAKE_BUILD_TYPE=Release  ..
+
+Instead of 'Release' CMAKE_BUILD_TYPE can also be set to
+   'Debug', 'MinSizeRel' or 'RelWithDebInfo'.
+To change the default installation directory add definition
+   '-D CMAKE_INSTALL_PREFIX=/usr/local'  to the preceding command.
+
+  $ make
+
+  $ sudo make install
+
+
+Alternatively you can just execute the script
+
+  $ ./scripts/install_sonorem.py -b Release --installdir /usr/local
+
+setting the parameter(s) to your preferred value (like above).
+
+  $ ./scripts/install_sonorem.py  --help
+
+for a description of all available options.
+

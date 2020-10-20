@@ -1,0 +1,29 @@
+Source: sonorem
+Priority: optional
+Maintainer: Stefano Marsili <efanomars@gmx.ch>
+Build-Depends: debhelper (>= 9)
+             , cmake
+             , python3
+             , libstmm-input-gtk-dm-dev (>= @SONOREM_REQ_STMM_INPUT_GTK_DM_VERSION@)
+             , libstmm-input-gtk-bt-dev (>= @SONOREM_REQ_STMM_INPUT_GTK_BT_VERSION@)
+Standards-Version: 3.9.8
+Section: libs
+#Homepage: @STMMI_WEBSITE_SECTION@/sonorem
+#Vcs-Git: https://www.gitlab.com/efanomars/sonorem.git
+#Vcs-Browser: https://www.gitlab.com/efanomars/sonorem.git
+
+
+Package: sonorem
+Section: net
+Architecture: any
+Depends: libstmm-input-gtk-dm@SONOREM_REQ_STMM_INPUT_GTK_DM_MAJOR_VERSION@ (>= @SONOREM_REQ_STMM_INPUT_GTK_DM_VERSION@)
+       , libstmm-input-gtk-bt@SONOREM_REQ_STMM_INPUT_GTK_BT_MAJOR_VERSION@ (>= @SONOREM_REQ_STMM_INPUT_GTK_BT_VERSION@)
+       , sox (>= @SONOREM_REQ_SOX_VERSION@)
+       , espeak (>= @SONOREM_REQ_ESPEAK_VERSION@)
+       , ${shlibs:Depends}, ${misc:Depends}
+Description: Sound recorder controlled by joystick
+ Simple GUI for recording sound, with sound feedback.
+ .
+ Might be used on a Rasberry Pi.
+ .
+ Uses sox to record, espeak to tell status.

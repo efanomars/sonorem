@@ -1,0 +1,32 @@
+# Maintainer: @STMMI_PACKAGER_FULLNAME@ <@STMMI_PACKAGER_EMAIL@>
+
+pkgname=@STMMI_SOURCE_PROJECT@
+pkgver=@STMMI_DEBIAN_SRC_VERSION@
+pkgrel=@STMMI_DEBIAN_REVISION@
+pkgdesc="Bluetoooth adapter connectivity GUI tool"
+url='@STMMI_WEBSITE_SECTION@/@STMMI_SOURCE_PROJECT@'
+arch=('x86_64' 'i686' 'aarch64')
+license=('GPL3')
+
+depends=('stmm-input' 'gtkmm3' 'sox' 'espeak' 'stmm-input-bt' 'bluez' 'bluez-libs')
+makedepends=('cmake' 'gcc' 'doxygen' 'graphviz' 'python')
+optdepends=()
+
+#provides=("@STMMI_SOURCE_PROJECT@")
+#replaces=("@STMMI_SOURCE_PROJECT@")
+#conflicts=("@STMMI_SOURCE_PROJECT@")
+
+source=('@STMMI_WEBSITE@/sources/@STMMI_TARBALL_NAME@')
+sha256sums=('@STMMI_TARBALL_SHA256@')
+
+build() {
+  cd "${srcdir}/@STMMI_SOURCE_PROJECT@"
+
+  ./scripts/install_@STMMI_SOURCE_PROJECT@.py -b=Release  --installdir="/usr" --no-install --no-sudo
+}
+
+package() {
+  cd "${srcdir}/@STMMI_SOURCE_PROJECT@"
+
+  ./scripts/priv/dd_install_@STMMI_SOURCE_PROJECT@.py -b=Release  --installdir="/usr" --destdir="${pkgdir}" --no-configure --no-make --no-sudo
+}

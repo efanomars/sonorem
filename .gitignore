@@ -1,0 +1,11 @@
+core
+/build
+configure
+.kdev4
+*.kdev4
+/nbproject
+.metadata
+.project
+.cproject
+.settings
+/stuff

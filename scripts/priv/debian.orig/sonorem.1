@@ -1,0 +1,242 @@
+.TH SONOREM 1
+.SH NAME
+sonorem \- Sound recording GUI tool.
+.SH SYNOPSIS
+.TP 5
+\fBsonorem\fR [\fIOPTION\fR]...
+.RI 
+.br
+
+.SH OPTIONS
+.PP
+.br
+\fB-V --version\fR
+                  Prints version.
+.br
+.br
+\fB-h --help\fR
+                  Prints this message.
+.br
+.br
+\fB-v --verbose\fR
+                  Logs more information.
+.br
+.br
+\fB-a --auto\fR
+                  Start recording automatically when launched.
+.br
+.br
+\fB-t --top\fR
+                  Each two seconds raises window to the top, so that it
+                  keeps the input focus.
+.br
+.br
+\fB-H --hours\fR HOURS
+                  Max duration for one recorded sound file (default: '1').
+.br
+.br
+\fB-M --minutes\fR MINUTES
+                  Max duration for one recorded sound file (default: '0').
+                  Value is added to that of --hours.
+.br
+.br
+\fB-m --max-file-size\fR FILESIZE
+                  Maximum file size (default: '100MB').
+                  Number can be followed by B, KB, MB, GB (no spaces inbetween).
+                  Examples: '200MB', '1GB', '50000KB'.
+.br
+.br
+\fB-f --min-free-space\fR MINSIZE
+                  Minimum free space needed to record (default: 400MB).
+                  Must be at least twice as big as --max-file-size.
+                  Number can be followed by B, KB, MB, GB (no spaces inbetween).
+.br
+.br
+\fB-r --rec-path\fR DIRPATH
+                  Recording directory path (default: '/home/$USER/Downloads').
+                  Example: '/home/pi/sonorem'.
+.br
+.br
+\fB-s --sound-format\fR FMTEXT
+                  The recording`s sound format defined with its file extension.
+                  The default is 'ogg'.
+                  The sound format must be supported by the 'rec' program.
+                  Examples: 'wav', 'aiff'.
+.br
+.br
+\fB--pre\fR STRING
+                  String to prepend to name of generated recordings (default is nothing).
+                  The string can only contain letters (A-Za-z), numbers (0-9), dashes (-).
+                  The un-prepended format of a file is for example: '20200724-085905.ogg'.
+.br
+.br
+\fB-x --exclude-mount\fR NAME
+                  Exclude mount name. Repeat this option to exclude more than one name.
+                  Example: 'SETTINGS'.
+.br
+.br
+\fB-p --speech-app\fR CMD
+                  Speech app to use (default: 'espeak').
+                  Examples: 'spd-say', '"espeak -v en-uk"'.
+.br
+.br
+\fB-l --log-dir\fR DIRPATH
+                  Directory path where log files should be stored.
+                  If the directory doesn't exist, it is created. If not defined, no log file is created.
+                  Example: '/home/pi/logs'.
+.br
+.br
+\fB--wifi-on\fR
+                  Turn on wifi. Has precedence over --wifi-off.
+.br
+.br
+\fB--wifi-off\fR
+                  Shutdown wifi, unless a file named 'sonorem.wifi' is found
+                  on a mounted stick when the program is started (see below) or --wifi-on is set.
+.br
+.br
+\fB--bluetooth-on\fR
+                  Turn on bluetooth. Has precedence over --bluetooth-off.
+.br
+.br
+\fB--bluetooth-off\fR
+                  Shutdown bluetooth, unless a file named 'sonorem.bluetooth' is found
+                  on a mounted stick when the program is started (see below) or --bluetooth-on is set.
+
+.SH DESCRIPTION
+.PP
+Simple (GUI) tool to record sound without interruption (24/7) with 'sox'.
+Recording switches to a new file after a fixed amount of time (\fB--hours\fR and \fB--minutes\fR options)
+or if the file exceeds a certain size (\fB--max-file-size\fR option). The finished recordings are
+then moved to automatically mounted usb sticks if space is available.
+The sticks can then be unmounted (see key '3' command below), removed, emptied, and then reinserted
+without having to access the device directly or via ssh or RDP (Remote Desktop Protocol).
+
+While it can be used on a PC, this program was created to be run on a \fBRaspberry Pi\fR device
+(or similar), possibly without a display.
+
+The program can be controlled by a keyboard (for example a number pad), a virtual
+bluetooth keyboard on another computer (stmm-input-btkb) or a joystick, and gives status
+feedback with 'espeak' (through inserted earphones).
+
+Key commands:
+   '1' or 'BTN_A': start recording (using sox)
+   '2' or 'BTN_B': stop recording
+   '3' or 'BTN_X': unmount non busy usb sticks with freshly stored recordings
+   '4' or 'BTN_Y': tell a piece of the current status (using espeak)
+
+The current status is told incrementally (key '4'). If you press the status key (or button)
+within 5 seconds from the previous press, you get the next piece of information.
+Among these information pieces are the mounts used to store recordings. Since
+the operating system gives them generic names such as '64 GB Volume', which can
+be ambiguous, you can name the usb sticks by creating a file 'sonorem.name'
+in their base directory. The file must contain exactly one line with your assigned name.
+The name cannot be too long or contain spaces or weird characters.
+Valid name example: 'asleep-2'.
+
+The automatically mounted usb sticks can be excluded as a target for storing recordings;
+just create an empty file in their base directory named 'sonorem.excl'. Read-only devices
+can be excluded with option \fB--exclude-mount\fR.
+
+The finished recordings are usually stored on the base directory of the mounted usb sticks.
+You can change this behavior by creating a file 'sonorem.folder' in their base
+directory containing the name of a direct sub-folder to which recordings should be moved to,
+instead.
+
+\fISuggestion\fR: create an "application autostart" entry with the command set to 'sonorem --auto',
+so that the program will restart recording automatically in case of a reboot caused
+by a power outage (Raspberry Pi doesn't require to login). If your desktop environment, like Gnome,
+doesn't let you add options, create a 'sonorem-auto.desktop' file in your Pi's '~/.config/autostart/'
+directory, with the following contents:
+.br
+    [Desktop Entry]
+    Type=Application
+    Name=sonorem-auto
+    Comment=Autostart sonorem and recording
+    Exec=sonorem --auto --top
+    Terminal=false
+.br
+Of course you can add other options, if you wish (like --top in this example).
+
+You might want to temporarily disable the \fB--auto\fR option when sonorem is auto-started
+(see suggestion above). To do so, insert a usb stick with a file named 'sonorem.stop'
+in its base directory, before the device is turned on (booted).
+The recording can also be stopped if the usb stick is inserted after boot.
+
+After the recording is stopped, give sonorem some time to move the files to the usb sticks
+(if any) before turning off the device.
+If recordings couldn't be moved to the connected usb sticks, they will be
+picked up (as long as the \fB--pre\fR and \fB--rec-path\fR options remain the same) the
+next time sonorem starts, and copying will be retried.
+
+If you want to enable wifi or bluetooth and inhibit the \fB--wifi-off\fR or \fB--bluetooth-off\fR
+options, when sonorem is started, make sure an inserted usb stick (even an excluded one) has a file
+named 'sonorem.wifi' or 'sonorem.bluetooth', respectively, in its base directory.
+Example: if your usb stick is mounted to '/media/23CF-76C4' just execute
+the command 'touch /media/23CF-76C4/sonorem.wifi' (use sudo if necessary).
+
+\fINote 1\fR: on the Raspberry Pi OS and on Debian, rfkill (the program that software-enables
+and -disables wifi and bluetooth, also known as airplane mode) can be run by any user (no need for sudo).
+Other distributions, like Manjaro, provide a rfkill group to which you can add your user. You can do it
+from your desktop environment's settings or from the command line with
+    $ sudo usermod -a -G rfkill pi
+.br
+where pi is the user name (use 'cat /etc/group | grep rfkill' to find out whether
+there is such a group, if there isn't, see next).
+.br
+On other distributions still, like Ubuntu, you might have to add a udev rule with
+a command like
+    $ sudo echo "KERNEL==\\"rfkill\\", MODE=\\"0666\\"" | sudo tee /etc/udev/rules.d/89-my-rfkill.rules
+.br
+which creates a file with a priority (here 89) higher than that of file '/usr/lib/udev/50-udev-default.rules' (50),
+which usually contains the default rfkill udev rule. For the rule to take effect you have to
+restart the device.
+
+\fINote 2\fR: Setting \fB--bluetooth-on\fR only software-enables bluetooth, it doesn't start
+the bluetooth \fBservice\fR. To start it you can use your desktop environment or a program
+such as 'bluetoother' or by running commands
+    $ sudo systemctl enable bluetooth; sudo systemctl start bluetooth
+.br
+You also want to make sure that connecting devices are already \fBpaired\fR when sonorem is used
+without a display, to avoid the loss of focus (see warning below).
+
+\fIWarning\fR: the window created by this program must retain \fBfocus\fR while running, otherwise
+the key and joystick commands can't work. On the Raspberry Pi OS (Raspbian), by default,
+LXDE's file manager (PCManFM) pops up a widget each time a usb stick is inserted in the device.
+To avoid this, access the device, for example from a PC via RDP (using remmina),
+open an instance of the file manager, go to menu item 'Edit', click on 'Preferences'
+and choose the 'Volume Management' tab, where you have to deactivate the
+option 'Show available options for removable media when they are inserted'. This
+is needed even if the \fB--top\fR option is passed to sonorem.
+Luckily, most other desktop environments don't have a similar behavior. If they do,
+try to find the solutions to avoid the loss of focus.
+
+\fINote 3\fR: the Raspberry Pi, to date, doesn't include a hardware clock. The time is set
+to the last use, until the time can be retrieved from the network with NTP. When sonorem
+is auto-started (see suggestion), the time might not yet be accurate. This means that
+the created log file (\fB--log-dir\fR option), which contains the current date and time,
+might have an unexpected name.
+
+\fINote 4\fR: this program expects the 'rec' (sox) and 'espeak' commands to be present
+on your device in order to work. Make sure the corresponding packages are installed.
+
+
+.SH AUTHOR
+.PP
+Written by Stefano Marsili <efanomars@gmx.ch>.
+
+.SH LICENSE
+.PP
+Copyright © 2020  Stefano Marsili.
+
+.PP
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+.PP
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.

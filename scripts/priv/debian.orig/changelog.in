@@ -1,0 +1,5 @@
+sonorem (@STMMI_DEBIAN_SRC_VERSION@-@STMMI_DEBIAN_REVISION@) unstable; urgency=low
+
+  * Automatically generated
+
+ -- @STMMI_PACKAGER_FULLNAME@ <@STMMI_PACKAGER_EMAIL@>  @STMMI_DEBIAN_CHANGELOG_DATE@

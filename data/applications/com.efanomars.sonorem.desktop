@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Sonorem
+Icon=sonorem
+Type=Application
+Terminal=false
+Categories=Utility;
+Keywords=record;sound;
+Comment=Record sounds
+Exec=sonorem
+GenericName=Sonorem
+Name[en_US]=Sonorem
