@@ -3,13 +3,13 @@
 pkgname=@STMMI_SOURCE_PROJECT@
 pkgver=@STMMI_DEBIAN_SRC_VERSION@
 pkgrel=@STMMI_DEBIAN_REVISION@
-pkgdesc="Bluetoooth adapter connectivity GUI tool"
+pkgdesc="Record sound 24/7 with Raspberry Pi"
 url='@STMMI_WEBSITE_SECTION@/@STMMI_SOURCE_PROJECT@'
 arch=('x86_64' 'i686' 'aarch64')
 license=('GPL3')
 
 depends=('stmm-input' 'gtkmm3' 'sox' 'espeak' 'stmm-input-bt' 'bluez' 'bluez-libs')
-makedepends=('cmake' 'gcc' 'doxygen' 'graphviz' 'python')
+makedepends=('cmake' 'python')
 optdepends=()
 
 #provides=("@STMMI_SOURCE_PROJECT@")

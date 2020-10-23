@@ -67,9 +67,6 @@ TEST_CASE("Sonorem, SonoModel")
 	}
 	REQUIRE(bOk);
 	makePath(sFsFolderPath);
-	//std::string sCmd = std::string{"touch "} + sFsFolderPath + "/some.txt";
-	//bOk = execCmd(sCmd.c_str(), sResult, sError);
-	//REQUIRE(bOk);
 	if (! sMountPath.empty()) {
 		makePath(sMountPath);
 	}
