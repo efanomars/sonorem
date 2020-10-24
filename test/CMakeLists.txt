@@ -38,7 +38,6 @@ if (BUILD_TESTING)
     set(STMMI_TEST_SOURCES_DIR  "${PROJECT_SOURCE_DIR}/test")
 
     set(STMMI_TEST_WITH_SOURCES_MODEL
-            #"${STMMI_TEST_SOURCES_DIR}/testingcommon.h"
             "${PROJECT_SOURCE_DIR}/src/rfkill.h"
             "${PROJECT_SOURCE_DIR}/src/rfkill.cc"
             "${PROJECT_SOURCE_DIR}/src/sonomodel.h"
@@ -47,10 +46,16 @@ if (BUILD_TESTING)
             "${PROJECT_SOURCE_DIR}/src/sonosources.cc"
             "${PROJECT_SOURCE_DIR}/src/util.h"
             "${PROJECT_SOURCE_DIR}/src/util.cc"
-            "${STMMI_TEST_SOURCES_DIR}/testutil.h"
-            "${STMMI_TEST_SOURCES_DIR}/testutil.cc"
+            "${STMMI_TEST_SOURCES_DIR}/fixtureGlib.h"
+            "${STMMI_TEST_SOURCES_DIR}/fixtureGlib.cc"
+            "${STMMI_TEST_SOURCES_DIR}/fixtureTestBase.h"
+            "${STMMI_TEST_SOURCES_DIR}/fixtureTestBase.cc"
+            "${STMMI_TEST_SOURCES_DIR}/fsfakerfixture.h"
+            "${STMMI_TEST_SOURCES_DIR}/fsfakerfixture.cc"
             "${STMMI_TEST_SOURCES_DIR}/mainloopfixture.h"
             "${STMMI_TEST_SOURCES_DIR}/mainloopfixture.cc"
+            "${STMMI_TEST_SOURCES_DIR}/testutil.h"
+            "${STMMI_TEST_SOURCES_DIR}/testutil.cc"
            )
     # Test sources should end with .cxx
     set(STMMI_TEST_SOURCES_MODEL

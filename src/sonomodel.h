@@ -61,7 +61,7 @@ public:
 		int64_t m_nMinFreeSpaceBytes = 400 * 1000 * 1000;
 		std::string m_sRecordingDirPath;
 		std::string m_sPreString; // string prepended to recording files
-		std::string m_sRecordingFileExt = ".ogg"; // ogg, wav, aiff, see rec
+		std::string m_sRecordingFileExt = "ogg"; // ogg, wav, aiff, see rec
 		std::vector<std::string> m_aExclMountNames;
 		bool m_bExcludeAllMountNames = false;
 		bool m_bAutoStart = false;
@@ -151,6 +151,9 @@ public:
 
 	static constexpr int32_t s_nCheckWaitingForFreeSpaceSeconds = 1;
 
+protected:
+	bool matchRecordingFileName(const std::string& sFileName) noexcept;
+
 private:
 	void initMountableVolumes() noexcept;
 
@@ -206,7 +209,6 @@ private:
 	void onAsyncUnmountNext() noexcept;
 
 	std::string getRecordingFileName(const std::string& sNow) noexcept;
-	bool matchRecordingFileName(const std::string& sFileName) noexcept;
 	void pickupLeftoverToBeCopiedRecordings() noexcept;
 
 private:

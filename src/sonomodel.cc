@@ -1141,6 +1141,7 @@ bool SonoModel::checkWaitingForFreeSpace() noexcept
 
 void SonoModel::interruptRecordingProcess() noexcept
 {
+//std::cout << "interruptRecordingProcess()" << '\n';
 	DebugCtx<SonoModel> oCtx(this, "SonoModel::interruptRecordingProcess");
 
 	assert(! m_sCurrentRecordingFilePath.empty());
@@ -1167,7 +1168,7 @@ bool SonoModel::checkWaitingChild() noexcept
 	DebugCtx<SonoModel> oCtx(this, "SonoModel::checkWaitingChild");
 
 	const bool bContinue = true;
-//std::cout << "checkWaitingChild()" << '\n';
+//std::cout << "checkWaitingChild() tot=" << m_aWaitingRecPids.size() << '\n';
 	if (m_aWaitingRecPids.empty()) {
 		return bContinue;
 	}
@@ -1180,10 +1181,13 @@ bool SonoModel::checkWaitingChild() noexcept
 		if (nRet == 0) {
 			// not terminated yet
 			++itPair;
+//std::cout << "checkWaitingChild() not terminated yet" << '\n';
 		} else if (nRet < 0) {
 			m_oLogger("Error waiting " + std::string{::strerror(errno)});
 			++itPair;
+//std::cout << "checkWaitingChild() error waiting" << '\n';
 		} else {
+//std::cout << "checkWaitingChild() finished" << '\n';
 			const std::string& sRecordingPath = oPair.second;
 			if (WIFEXITED(nWaitStatus)) {
 				//

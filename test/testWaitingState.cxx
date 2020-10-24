@@ -24,12 +24,12 @@
 #include "sonomodel.h"
 #include "util.h"
 
+#include "fsfakerfixture.h"
 #include "mainloopfixture.h"
 #include "testutil.h"
+#include "fixtureGlib.h"
 
 #include <fspropfaker/fspropfaker.h>
-
-#include <gtkmm.h>
 
 
 namespace sono
@@ -42,50 +42,29 @@ using std::make_unique;
 namespace testing
 {
 
-TEST_CASE("Sonorem, SonoModel")
+TEST_CASE_METHOD(STFX<GlibFixture>, "SonoModelWaitingState")
 {
-	// !!!  Initializing gtk is needed because Glib::init(), probably also called when creating the main loop,  isn't enough !!!
-	Glib::RefPtr<Gtk::Application> refApp;
-	try {
-		//
-		refApp = Gtk::Application::create("com.efanomars.sonorem-testWaitingState-SonoModel");
-	} catch (const std::runtime_error& oErr) {
-		std::cout << "Error: " << oErr.what() << '\n';
-		REQUIRE(false);
-		return; //--------------------------------------------------------------
-	}
+	FsFakerFixture oFFF("sonoremtest");
 
-	const std::string sMountName = "sonoremtest";
-	const std::string sFsFolderPath = "/tmp/sonorem-waits/waits-base";
-	const std::string sMountPath = "/tmp/sonorem-waits/waits-mount";
-	const std::string sLogFilePath = "/tmp/sonorem-waits/waits.log";
-	std::string sResult;
-	std::string sError;
-	bool bOk = execCmd("rm -rf /tmp/sonorem-waits", sResult, sError);
-	if (! bOk) {
-		std::cout << "Could not remove folder: " << sError << '\n';
-	}
-	REQUIRE(bOk);
-	makePath(sFsFolderPath);
-	if (! sMountPath.empty()) {
-		makePath(sMountPath);
-	}
-
-// std::cout << "2222 " << '\n';
-	auto oResult = fspf::FsPropFaker::create(sMountName, sFsFolderPath, sMountPath, sLogFilePath);
-	auto& refFaker = oResult.m_refFaker;
-	sError = std::move(oResult.m_sError);
-	REQUIRE(refFaker);
-	REQUIRE(sError.empty());
-//std::cout << "Mount path is " << refFaker->getMountPath() << '\n';
-
+	auto& refFaker = oFFF.m_refFaker;
 	const auto nBlockSize = refFaker->getBlockSize();
+
+	// if something goes wrong you will probably need to fusermount -u manually
+	std::cout << "Mount path is " << refFaker->getMountPath() << '\n';
 
 	constexpr int64_t nMegaByte = fspf::FsPropFaker::s_nMegaByteBytes;
 	refFaker->setFakeDiskFreeSizeInBlocks(7 * nMegaByte / nBlockSize);
 	::sleep(1);
 
-	unique_ptr<SonoModel> refSonoModel;
+	class TestSonoModel : public SonoModel
+	{
+	public:
+		using SonoModel::SonoModel;
+		using SonoModel::init;
+		using SonoModel::matchRecordingFileName;
+	};
+	std::string sError;
+	unique_ptr<TestSonoModel> refSonoModel;
 	auto oInitModel = [&]()
 	{
 		SonoModel::Init oInit;
@@ -93,11 +72,11 @@ TEST_CASE("Sonorem, SonoModel")
 		oInit.m_bExcludeAllMountNames = true;
 		oInit.m_bRfkillBluetoothOff = true;
 		oInit.m_bRfkillWifiOff = true;
-		oInit.m_sRecordingDirPath = sMountPath;
+		oInit.m_sRecordingDirPath = oFFF.getFakeFsPath();
 		oInit.m_nMaxFileSizeBytes = 1000 * nMegaByte;
 		oInit.m_nMaxRecordingDurationSeconds = 10;
 		oInit.m_nMinFreeSpaceBytes = 10 * nMegaByte;
-		refSonoModel = std::make_unique<SonoModel>([](const std::string&){});
+		refSonoModel = std::make_unique<TestSonoModel>([](const std::string&){});
 		sError = refSonoModel->init(std::move(oInit));
 		if (! sError.empty()) {
 			std::cout << "Could not create model: " << sError << '\n';
@@ -128,15 +107,40 @@ TEST_CASE("Sonorem, SonoModel")
 			refSonoModel->startRecording();
 		} else if (nProgress == 7) {
 			REQUIRE(refSonoModel->getState() == SonoModel::STATE_RECORDING);
+		} else if (nProgress == 8) {
+			::sleep(1); // give time to rec process to start
+		} else if (nProgress == 9) {
+			::sleep(1); // give time to rec process to start
+		} else if (nProgress == 10) {
+			refSonoModel->stopRecording();
+			::sleep(1); // give time to rec process to finish
+		} else if (nProgress == 11) {
+			::sleep(1); // give time to rec process to finish
+		} else if (nProgress == 12) {
+			::sleep(1); // give time to rec process to finish
+			REQUIRE(refSonoModel->getNrToBeCopiedRecordings() == 1);
 		} else {
-			refSonoModel.reset();
-			sError = refFaker->unmount();
-			REQUIRE(sError.empty());
 			return ! bContinue;
 		}
 		return bContinue;
 	}, nTestIntervalMillisec);
 
+	Glib::Dir oDir(oFFF.getRealFsPath());
+	int32_t nGeneratedRecordings = 0;
+	for (const auto& sFileName : oDir) {
+		const std::string sFilePath = oFFF.getRealFsPath() + "/" + sFileName;
+		//std::cout << sFilePath << '\n';
+		if (Glib::file_test(sFilePath, Glib::FILE_TEST_IS_DIR)) {
+			continue;
+		}
+		REQUIRE(refSonoModel->matchRecordingFileName(sFileName));
+		++nGeneratedRecordings;
+	}
+	REQUIRE(nGeneratedRecordings == 1);
+
+	refSonoModel.reset();
+	sError = refFaker->unmount();
+	REQUIRE(sError.empty());
 }
 
 } // namespace testing

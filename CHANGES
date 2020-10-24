@@ -1,3 +1,11 @@
+sonorem (0.3) unstable; urgency=low
+
+  * Fix format option default
+  * Improve test
+  * Increase minor version
+
+ -- Stefano Marsili <efanomars@gmx.ch>  Sat, 24 Oct 2020 19:29:39 +0100
+
 sonorem (0.2) unstable; urgency=low
 
   * Remove gcc from PKGBUILD (requested by AUR)

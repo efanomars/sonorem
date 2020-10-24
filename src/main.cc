@@ -86,13 +86,13 @@ static void printUsage() noexcept
 	std::cout << "                   Recording directory path (default: /home/$USER" << s_sHomeRelMainDir << ")." << '\n';
 	std::cout << "  -s --sound-format FMTEXT" << '\n';
 	std::cout << "                   The recording`s sound format defined with its file extension." << '\n';
-	std::cout << "                   The default is " << SonoModel::s_sRecordingDefaultFileExt << "." << '\n';
+	std::cout << "                   The default is '" << SonoModel::s_sRecordingDefaultFileExt << "'." << '\n';
 	std::cout << "                   The sound format must be supported by the '" << SonoModel::s_sRecordingProgram << "' program." << '\n';
 	std::cout << "                   Examples: 'wav', 'aiff'." << '\n';
 	std::cout << "  --pre STRING" << '\n';
 	std::cout << "                   String to prepend to name of generated recordings (default is nothing)." << '\n';
 	std::cout << "                   The string can only contain letters (A-Za-z), numbers (0-9), dashes (-)." << '\n';
-	std::cout << "                   The un-prepended format of a file is '" << SonoModel::getNowString() << ".EXT'." << '\n';
+	std::cout << "                   The un-prepended format of a file is for example '" << SonoModel::getNowString() << ".ogg'." << '\n';
 	std::cout << "  -x --exclude-mount NAME" << '\n';
 	std::cout << "                   Exclude mount name. Repeat this option to exclude more than one name." << '\n';
 	std::cout << "  -p --speech-app CMD" << '\n';
@@ -239,9 +239,6 @@ int sonoremMain(int nArgC, char** aArgV) noexcept
 	bool bHelp = false;
 	bool bVersion = false;
 	std::string sMatch;
-	//int32_t nRes = 0;
-	//bool bRes = false;
-	std::string sRes;
 	char* p0ArgVZeroSave = ((nArgC >= 1) ? aArgV[0] : nullptr);
 	while (nArgC >= 2) {
 		auto nOldArgC = nArgC;

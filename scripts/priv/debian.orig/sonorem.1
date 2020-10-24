@@ -194,8 +194,8 @@ restart the device.
 
 \fINote 2\fR: Setting \fB--bluetooth-on\fR only software-enables bluetooth, it doesn't start
 the bluetooth \fBservice\fR. To start it you can use your desktop environment or a program
-such as 'bluetoother' or by running commands
-    $ sudo systemctl enable bluetooth; sudo systemctl start bluetooth
+such as 'bluetoother' or by running command
+    $ sudo systemctl --now enable bluetooth
 .br
 You also want to make sure that connecting devices are already \fBpaired\fR when sonorem is used
 without a display, to avoid the loss of focus (see warning below).

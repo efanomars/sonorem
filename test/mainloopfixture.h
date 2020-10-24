@@ -50,22 +50,17 @@ public:
 	template<typename CF>
 	void run(CF oCF, int32_t nCheckMillisec)
 	{
-//std::cout << "  MainLoopFixture::run" << '\n';
 		assert(nCheckMillisec > 0);
 
 		Glib::signal_timeout().connect([&]() -> bool
 		{
-//std::cout << "  MainLoopFixture::run timeout" << '\n';
 			const bool bContinue = oCF();
-//std::cout << "  MainLoopFixture::run timeout bContinue=" << bContinue << '\n';
 			if (!bContinue) {
 				m_refML->quit();
 			}
 			return bContinue;
 		}, nCheckMillisec);
-//std::cout << "  MainLoopFixture::run  before" << '\n';
 		m_refML->run();
-//std::cout << "  MainLoopFixture::run  after" << '\n';
 	}
 private:
 	Glib::RefPtr<Glib::MainLoop> m_refML;
