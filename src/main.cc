@@ -389,8 +389,8 @@ int sonoremMain(int nArgC, char** aArgV) noexcept
 		oInit.m_sRecordingFileExt = SonoModel::s_sRecordingDefaultFileExt;
 	}
 	//
-	if (oInit.m_nMaxFileSizeBytes > oInit.m_nMinFreeSpaceBytes * 3) {
-		std::cerr << "Sorry, --max-file-size cannot be bigger than a third of --min-free-space" << '\n';
+	if (oInit.m_nMaxFileSizeBytes > oInit.m_nMinFreeSpaceBytes) {
+		std::cerr << "Sorry, --max-file-size cannot be bigger than --min-free-space" << '\n';
 		return EXIT_FAILURE; //---------------------------------------------
 	}
 	if (sSpeechApp.empty()) {

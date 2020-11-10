@@ -56,9 +56,9 @@ public:
 
 	struct Init
 	{
-		int32_t m_nMaxRecordingDurationSeconds = 60;
-		int64_t m_nMaxFileSizeBytes = 100 * 1000 * 1000;
-		int64_t m_nMinFreeSpaceBytes = 400 * 1000 * 1000;
+		int32_t m_nMaxRecordingDurationSeconds = 60 * 60;
+		int64_t m_nMaxFileSizeBytes = 1 * 1000 * 1000 * 1000;
+		int64_t m_nMinFreeSpaceBytes = static_cast<int64_t>(2) * 1000 * 1000 * 1000;
 		std::string m_sRecordingDirPath;
 		std::string m_sPreString; // string prepended to recording files
 		std::string m_sRecordingFileExt = "ogg"; // ogg, wav, aiff, see rec

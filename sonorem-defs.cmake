@@ -21,7 +21,7 @@
 #   MINOR is REVISION (implementation of interface)
 #   AGE is always 0
 set(SONOREM_MAJOR_VERSION 0)
-set(SONOREM_MINOR_VERSION 3) # !-U-!
+set(SONOREM_MINOR_VERSION 4) # !-U-!
 set(SONOREM_VERSION "${SONOREM_MAJOR_VERSION}.${SONOREM_MINOR_VERSION}.0")
 
 # required stmm-input-gtk-dm version
